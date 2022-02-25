@@ -14,10 +14,13 @@ function getVehicleByModel(year, make, model){
 }
 
 function findVehicle(payload){
-    let [year, make, model] = payload.split(' ')
+    let [year, make, model] = payload.car.split(' ')
+
+
 
     make = make.toLowerCase()
     model = model.toLowerCase()
+
 
     return db('vehicles').where({year, make, model})
 }

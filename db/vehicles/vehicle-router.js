@@ -1,8 +1,13 @@
 const express = require('express')
+const {urlencoded } = require('body-parser')
+
+
+
 
 const vehicles = require('./vehicle-model')
 
 const router = express.Router()
+router.use(urlencoded({extended: true}))
 
 router.get('/', async(req,res,next) =>{
     try{
@@ -37,16 +42,23 @@ router.get('/:year/:make/:model', async(req,res,next) =>{
     }
 })
 
-router.get('/:findVehicle', async(req,res,next)=>{
+router.post('/findVehicle', async(req,res,next)=>{
+
+    console.log('this is line 42: ', req.body)
     try{
-        const payload = req.query.body
+        const payload = req.body
+        
+
         console.log(payload)
         const [findVehicle] = await vehicles.findVehicle(payload)
         console.log(findVehicle)
-        if (findVehicle === 'undefined'){
-            res.status(404)
+        if (findVehicle === undefined){
+        
+            res.status(403).json({message: 'car not found'})
+        } else{
+            res.status(200).json({car: findVehicle})
         }
-        res.status(200).json({car: findVehicle})
+
     }
     catch(err){
         next(err)
